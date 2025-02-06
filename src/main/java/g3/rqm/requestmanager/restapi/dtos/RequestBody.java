@@ -10,5 +10,6 @@ import java.util.UUID;
 public class RequestBody {
     Long id;
     UUID unique_id;
+    String url;
     String body;
 }

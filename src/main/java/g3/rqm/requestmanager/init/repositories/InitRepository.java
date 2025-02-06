@@ -39,7 +39,7 @@ public class InitRepository {
 
     private void createCacheTables() {
         cacheTemplate.execute("create table if not exists REQUEST_MANAGER_PARAM(ID identity primary key, PARAM_NAME varchar(32) unique, PARAM_VALUE varchar(256))");
-        cacheTemplate.execute("create table if not exists REQUEST_BODY_CACHE(ID identity primary key, UNIQUE_ID uuid, BODY varchar(512))");
+        cacheTemplate.execute("create table if not exists REQUEST_BODY_CACHE(ID identity primary key, UNIQUE_ID uuid unique, URL varchar(64), BODY varchar(512))");
 
         cacheTemplate.execute("create table if not exists COMPONENT(ID int primary key, COMPONENT_NAME varchar(64), TOPIC_NAME varchar(64))");
         cacheTemplate.execute("create table if not exists OPERATION(ID int primary key, OPERATION_NAME varchar(64), COMPONENT_ID int)");

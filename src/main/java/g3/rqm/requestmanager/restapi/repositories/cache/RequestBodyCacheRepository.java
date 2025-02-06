@@ -3,14 +3,11 @@ package g3.rqm.requestmanager.restapi.repositories.cache;
 import g3.rqm.requestmanager.restapi.dtos.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Repository
@@ -22,13 +19,14 @@ public class RequestBodyCacheRepository {
         this.template = template;
     }
 
-    public void addRequestBody(UUID uniqueId, String body) {
+    public void addRequestBody(UUID uniqueId, String url, String body) {
         String sql = """
-            insert into request_body_cache(unique_id, body)
-            values (:uniqueId, :body)
+            insert into request_body_cache(unique_id, url, body)
+            values (:uniqueId, :url, :body)
         """;
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("uniqueId", uniqueId)
+                .addValue("url", url)
                 .addValue("body", body);
         template.update(sql, sqlParameterSource);
     }
@@ -42,6 +40,7 @@ public class RequestBodyCacheRepository {
         return template.queryForObject(sql, namedParameters, (rs, rowNum) ->
                 new RequestBody(rs.getLong("ID"),
                                 UUID.fromString(rs.getString("UNIQUE_ID")),
+                                rs.getString("URL"),
                                 rs.getString("BODY")));
     }
 
